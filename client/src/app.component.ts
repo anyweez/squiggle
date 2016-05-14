@@ -1,9 +1,9 @@
 'use strict'
 import { Component } from '@angular/core';
 import { LocationService } from './services/places';
-import { ClockService, DerivedClock, Clock } from './services/times';
-
-let clock = new ClockService();
+import { ClockService, Clock } from './services/times';
+import { Http } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * Component that displays the current time as a minor view in the UI. The current
@@ -14,13 +14,16 @@ let clock = new ClockService();
   templateUrl: 'templates/current-time.html',
 })
 export class CurrentTimeComponent {
-  constructor(private clock: ClockService, private locations: LocationService) { }
-
-  time = this.clock.getCurrentTime();
+  time: Clock;
   loc = {
     source: this.locations.src,
     dest: this.locations.dest,
   };
+  
+  constructor(private clock: ClockService, private locations: LocationService) { 
+    clock.getCurrentTime().subscribe( clock => this.time = clock );  
+  }
+
 }
 
 @Component({
@@ -28,14 +31,11 @@ export class CurrentTimeComponent {
   templateUrl: 'templates/next-alarm.html',
 })
 export class NextAlarmComponent {
-  constructor(private clock: ClockService) { }
-
-  time = new DerivedClock(new Clock(), function() {
-    return new Promise((resolve, reject) => resolve({
-      hours: 0,
-      minutes: 30,
-    }));
-  }, false);
+  time: Clock;
+  
+  constructor(private clock: ClockService) { 
+    clock.getArrivalTime().subscribe( clock => this.time = clock );
+  }
 }
 
 @Component({
@@ -44,11 +44,15 @@ export class NextAlarmComponent {
   directives: [CurrentTimeComponent, NextAlarmComponent],
 })
 export class AppComponent {
-  constructor(private clock: ClockService, private locations: LocationService) { }
   time = {
-    current: this.clock.getCurrentTime(),
-    arrival: this.clock.getArrivalTime(),
+    current: null as Clock,
+    arrival: null as Clock,
   };
 
   loc = this.locations;
+  
+  constructor(private clock: ClockService, private locations: LocationService) {
+    this.clock.getCurrentTime().subscribe( (clock) => this.time.current = clock )
+    this.clock.getArrivalTime().subscribe( (clock) => this.time.arrival = clock )
+  }
 }

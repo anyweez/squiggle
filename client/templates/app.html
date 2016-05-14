@@ -9,7 +9,7 @@
                 <option *ngFor="let location of loc.getLocations()" [ngValue]="location">{{location.label}}</option>    
             </select> <!-- <span id="destination">{{ loc.dest.label }}</span>  -->
             by...</p>
-        <h2>{{ time.arrival.hrs }}:{{ time.arrival.mins }}<span id="ampm">{{ time.arrival.ampm }}</span></h2>
+        <h2>{{ time.arrival?.hrs }}:{{ time.arrival?.mins }}<span id="ampm">{{ time.arrival?.ampm }}</span></h2>
     </div>
     
 </main>
