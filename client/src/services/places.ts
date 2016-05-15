@@ -1,5 +1,7 @@
-class Location {
+export class Location {
   label: string;
+  latitude: number;
+  longitude: number;
 
   constructor(name) {
     this.label = name;

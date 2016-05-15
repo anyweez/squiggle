@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@angular/core'
 import { Http, Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { ServerDataService } from './serverdata';
 import * as moment from 'moment';
 
-interface Offset {
+export interface Offset {
     hours: number,
     minutes: number,
 };
@@ -71,10 +72,13 @@ export class Clock {
 export class ClockService {
     private currentTime: Clock;
     private arrivalTime: Clock;
+    private latestOffset: Offset = { hours: 0, minutes: 0 };
 
-    constructor( private http: Http ) {
+    constructor( private http: Http, private serverData: ServerDataService ) {
         this.currentTime = new Clock(); // keep track of now
         this.arrivalTime = new Clock(); // keep track of estimated arrival time
+        
+        this.serverData.offsets().subscribe( res => this.latestOffset = res );
     }
     
     getCurrentTime() {
@@ -86,9 +90,6 @@ export class ClockService {
     getArrivalTime() {
         return Observable
             .interval(1000) // every second; too frequent
-            .map( () => this.arrivalTime.offset({
-                hours: 0,
-                minutes: 37,
-            })); 
+            .map( () => this.arrivalTime.offset(this.latestOffset) ); 
     }
 }

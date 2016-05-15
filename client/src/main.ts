@@ -7,5 +7,6 @@ import { HTTP_PROVIDERS } from '@angular/http';   // Include this in bootstrap s
 import { AppComponent } from './app.component';
 import { ClockService } from './services/times';
 import { LocationService } from './services/places';
+import { ServerDataService } from './services/serverdata';
 
-bootstrap(AppComponent, [HTTP_PROVIDERS, ClockService, LocationService]);
+bootstrap(AppComponent, [HTTP_PROVIDERS, ClockService, LocationService, ServerDataService]);
