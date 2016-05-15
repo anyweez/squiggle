@@ -21,7 +21,6 @@ server.route({
         let source = placedb.find('luke', placedb.SOURCE);
         let destination = placedb.find('luke', placedb.DESTINATION);
 
-        console.log(source);
         if (source === undefined || destination === undefined) return reply().code(400);
         
         // Find the travel time between these two places and return it.
