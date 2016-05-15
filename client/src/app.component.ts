@@ -1,8 +1,8 @@
 'use strict'
 import { Component } from '@angular/core';
-// import { LocationService } from './services/places';
+import { OffsetPipe } from './pipes/offset';
 import { ServerDataService } from './services/serverdata';
-import { ClockService, Clock } from './services/times';
+import { Offset, ClockService, Clock } from './services/times';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
@@ -42,11 +42,18 @@ export class NextAlarmComponent {
   selector: 'squiggle-app',
   templateUrl: 'templates/app.html',
   directives: [CurrentTimeComponent, NextAlarmComponent],
+  pipes: [OffsetPipe],
 })
 export class AppComponent {
   time = {
     current: null as Clock,
     arrival: null as Clock,
+  };
+  
+  offsets = {
+    prep: null as Offset,
+    travel: null as Offset,
+    snooze: null as Offset,
   };
   
   // Only using the 'to' location in the main component.
@@ -58,5 +65,11 @@ export class AppComponent {
     
     // Set up listeners on locations.
     sd.to().subscribe( res => this.to = res );
+    
+    sd.offset_prep().subscribe( res => {
+      console.log(res);
+      this.offsets.prep = res
+    } );
+    sd.offset_travel().subscribe( res => this.offsets.travel = res );
   }
 }

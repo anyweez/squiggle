@@ -3,7 +3,7 @@
 let gulp = require('gulp');
 let del = require('del');
 // let babel = require('gulp-babel');
-// let sass = require('gulp-sass');
+let sass = require('gulp-sass');
 let rename = require('gulp-rename');
 let browserify = require('gulp-browserify');
 let typescript = require('gulp-typescript');
@@ -12,7 +12,7 @@ let concat = require('gulp-concat');
 
 let project = typescript.createProject('tsconfig.json');
 
-gulp.task('default', ['html', 'dist']);
+gulp.task('default', ['html', 'dist', 'css']);
 
 /**
  * Convert Typescript into raw Javascript. All output goes into a temporary
@@ -42,6 +42,12 @@ gulp.task('html', function() {
 
     return gulp.src('./*.html')
         .pipe(gulp.dest('./public'));
+});
+
+gulp.task('css', function () {
+    gulp.src('./scss/main.scss')
+        .pipe(sass())
+        .pipe(gulp.dest('./public/css'));
 });
 
 // gulp.task('watch', ['default'], function() {

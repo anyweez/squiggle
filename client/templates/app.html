@@ -6,5 +6,8 @@
     <div class="clock" id="arriving-clock">
         <p>arriving at <span id="dest">{{ to?.label }}</span> by...</p>
         <h2>{{ time.arrival?.hrs }}:{{ time.arrival?.mins }}<span id="ampm">{{ time.arrival?.ampm }}</span></h2>
-    </div>  
+        <section class="offset-label"><i class="fa fa-bed" aria-hidden="true"></i>{{ offsets?.prep | offset }}</section>
+        <section class="offset-label"><i class="fa fa-car" aria-hidden="true"></i>{{ offsets?.travel | offset }}</section>
+        <section class="offset-label"><i class="fa fa-bell-o" aria-hidden="true"></i>{{ offsets?.snooze | offset }}</section>
+    </div>
 </main>

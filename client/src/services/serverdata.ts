@@ -6,27 +6,13 @@ import { Location } from './places';
 
 @Injectable()
 export class ServerDataService {
-    _src: Location;
-    _dest: Location;
-    _offsets = {
-        travel: { hours: 0, minutes: 0 },
-        prep: { hours: 0, minutes: 0 },
-    };
-    
     req: any;
     
     constructor (private http: Http) { 
         this.req = Observable
-            .interval(1000)
+            .interval(2000)
             .flatMap( () => http.get('http://localhost:8050/travel?from=home&to=work') )
             .map( res => res.json() )
-            // .subscribe( result => {
-            //     this._src = result.places.from;
-            //     this._dest = result.places.to;
-                
-            //     this._offsets.travel = result.travel;
-            //     this._offsets.prep = result.prep;
-            // });
     }
     
     /**
@@ -34,7 +20,6 @@ export class ServerDataService {
      */
     from() {
         return this.req.map( (res) => res.places.from );
-        // return this._src;
     }
     
     /**
@@ -42,7 +27,6 @@ export class ServerDataService {
      */
     to() {
         return this.req.map( (res) => res.places.to );
-        // return this._dest;
     }
     
     /**
@@ -56,9 +40,13 @@ export class ServerDataService {
                 minutes: res.travel.minutes + res.prep.minutes,
             };
         });
-        // return {
-        //     hours: this._offsets.travel.hours + this._offsets.prep.hours,
-        //     minutes: this._offsets.travel.minutes + this._offsets.prep.minutes,
-        // };
+    }
+    
+    offset_prep() {
+        return this.req.map( res => res.prep );
+    }
+    
+    offset_travel() {
+        return this.req.map( res => res.travel );
     }
 }
